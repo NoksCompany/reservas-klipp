@@ -1,10 +1,9 @@
-# Markdown Playground Demo
+# Porque deberias usar Klipp?
 
-This preview supports *italic*, **bold**, ***bold+italic***, ~~strikethrough~~, and inline code like `npm run dev`.
+### Que es Klipp?
 
-## Headers
+Klipp es una pagina web con un sistema renovado para realizar reservas en las peluquerias de El Prat de Llobregat, con asistencia de la ia en su propio chat dentro de la pagina web lista para apuntar tu reserva.
 
-### H3 Section
 #### H4 Section
 ##### H5 Section
 
