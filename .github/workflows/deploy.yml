@@ -26,7 +26,7 @@ jobs:
 
       - run: pip install mkdocs-bootswatch
 
-      - run: mkdocs simplex
+      - run: mkdocs build
 
       - uses: actions/configure-pages@v5
 
