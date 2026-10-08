@@ -24,9 +24,9 @@ jobs:
         with:
           python-version: 3.x
 
-      - run: pip install mkdocs-material
+      - run: pip install mkdocs-bootswatch
 
-      - run: mkdocs build
+      - run: mkdocs simplex
 
       - uses: actions/configure-pages@v5
 
