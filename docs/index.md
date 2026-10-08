@@ -4,22 +4,13 @@
 
 Klipp es una pagina web con un sistema renovado para realizar reservas en las peluquerias de El Prat de Llobregat, con asistencia de la ia en su propio chat dentro de la pagina web lista para apuntar tu reserva.
 
-#### H4 Section
-##### H5 Section
+## Peluquerias Asociadas a nuestro sistema de reservas:
 
-## Lists
+- Indian Cut
+- Peluqueria ñoñe
+- HairCuts Style
 
-- Unordered list item
-- Another item with **strong** text
-
-1. Ordered step one
-2. Ordered step two
-
-## Image
-
-![Sample chart](/static/home/users-graph.png)
-
-## Code blocks
+## Bloques de codigo
 
 ```python
 def greet(name: str) -> str:
@@ -35,10 +26,11 @@ console.log(users.map((u) => u.name).join(", "));
 curl -s https://www.devtoolsdaily.com/sitemap.xml | head -n 5
 ```
 
-## Table
+## Tablas
 
-| Feature | Status | Notes |
+| Peluquerias | Asociacion| Tiempo de asociacion |
 | --- | :---: | --- |
-| GFM Tables | Yes | Uses `remark-gfm` |
-| Syntax Highlighting | Yes | Multiple languages |
-| Inline Code | Yes | Styled with monospace |
+| Indian Cut | Yes | Contrato hasta 2028 |
+| Peluqueria ñoñe | Yes | Contrato hasta 2035 |
+| HairCuts Style | Yes | Contrato hasta 2030 |
+| Peluqueros Spain | No |------------------------- |
