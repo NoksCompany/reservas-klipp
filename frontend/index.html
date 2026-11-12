@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klipp - Reservas de Peluquería</title>
+  
+  <!-- Fuente San Francisco / Inter estilo Apple -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================
+       VARIABLES Y ESTILOS GLOBALES (Estilo Apple)
+       ========================================== */
+    :root {
+      --bg-color: #000000;
+      --text-color: #f5f5f7;
+      --text-secondary: #86868b;
+      --accent-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-family);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================
+       BARRA DE NAVEGACIÓN BLUR
+       ========================================== */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-color);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-reservar {
+      background: var(--accent-gradient);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 980px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-reservar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      padding: 0.55rem 1.1rem;
+      border-radius: 980px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ==========================================
+       MODAL VISUAL CON CSS (:target)
+       ========================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay:target {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay:target .modal-card {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text-color);
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      color: #fff;
+      outline: none;
+      font-size: 0.95rem;
+      font-family: var(--font-family);
+    }
+
+    .form-input:focus {
+      border-color: #6366f1;
+    }
+
+    /* ==========================================
+       HERO & ANIMACIÓN PURA CSS
+       ========================================== */
+    @keyframes heroEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .hero-section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      animation: heroEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .gradient-text {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Contenedor que cubre suavemente el Hero al deslizar */
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+      background-color: var(--bg-color);
+      box-shadow: 0 -60px 80px rgba(0, 0, 0, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 4rem;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5.5rem 2rem;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-description {
+      text-align: center;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 3.5rem auto;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* ==========================================
+       TARJETAS GLASSMORPHISM
+       ========================================== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, background 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(168, 85, 247, 0.45);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .card-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* ==========================================
+       SECCIÓN VISUAL DE RESERVA
+       ========================================== */
+    .booking-box {
+      background: rgba(18, 18, 24, 0.75);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .booking-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: var(--font-family);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-select:focus {
+      border-color: #6366f1;
+    }
+
+    .form-select option {
+      background-color: #141419;
+      color: #fff;
+    }
+
+    /* ==========================================
+       PELUQUERÍAS Y FOOTER
+       ========================================== */
+    .salon-card {
+      text-align: center;
+    }
+
+    .salon-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      padding: 3.5rem 2rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .booking-box {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <header>
+    <nav>
+      <a href="#" class="logo-text">Klipp</a>
+      <ul class="nav-links">
+        <li><a href="#nosotros">Quiénes somos</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#peluquerias">Peluquerías</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="#login-modal" class="btn-outline">Iniciar Sesión</a>
+        <a href="#reservar" class="btn-reservar">Reservar cita</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MODAL VISUAL DE LOGIN (CSS Puro) -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-card">
+      <a href="#" class="modal-close">&times;</a>
+      <h3 class="modal-title">Bienvenido a <span class="gradient-text">Klipp</span></h3>
+      <form action="#reservar">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" class="form-input" placeholder="nombre@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-reservar" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem;">Continuar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <h1 class="hero-title">
+      Tu corte perfecto,<br>
+      <span class="gradient-text">a un solo Klipp.</span>
+    </h1>
+    <p class="hero-subtitle">
+      Reserva tu cita en las mejores barberías y peluquerías en segundos. Sin esperas, sin llamadas.
+    </p>
+    <div>
+      <a href="#reservar" class="btn-reservar" style="padding: 0.95rem 2.2rem; font-size: 1rem;">Explorar y Reservar</a>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="content-wrapper">
+
+    <!-- SECCIÓN: QUIÉNES SOMOS -->
+    <section id="nosotros">
+      <h2 class="section-title">Redefiniendo la experiencia del cuidado personal.</h2>
+      <p class="section-description">
+        En Klipp conectamos a los estilistas más talentosos con personas que valoran su tiempo y su imagen.
+      </p>
+      
+      <div class="grid">
+        <div class="card">
+          <h3>Innovación constante</h3>
+          <p>Unificamos un diseño limpio y moderno con el arte de la barbería tradicional para ofrecer una experiencia fluida.</p>
+        </div>
+        <div class="card">
+          <h3>Gestión del tiempo</h3>
+          <p>Eliminamos el tiempo perdido en salas de espera. Eliges tu hora exacta, confirmas y listo.</p>
+        </div>
+        <div class="card">
+          <h3>Garantía de calidad</h3>
+          <p>Todas las peluquerías en nuestra plataforma han sido seleccionadas rigurosamente para garantizar estándares excepcionales.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: CÓMO FUNCIONA -->
+    <section id="como-funciona">
+      <h2 class="section-title">Tres pasos. Así de fácil.</h2>
+      <p class="section-description">Diseñado para ser veloz, claro y transparente.</p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-number">01</div>
+          <h3>Encuentra</h3>
+          <p>Explora entre las peluquerías más exclusivas de tu ciudad o filtra por servicios específicos.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">02</div>
+          <h3>Selecciona</h3>
+          <p>Elige tu estilista favorito, el tipo de corte o tratamiento y la fecha y hora que mejor te convenga.</p>
+        </div>
+        <div class="card">
+          <div class="card-number">03</div>
+          <h3>Disfruta</h3>
+          <p>Acude a tu cita sin colas ni esperas innecesarias. Paga cómodamente en el local.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: PELUQUERÍAS QUE NOS UTILIZAN -->
+    <section id="peluquerias">
+      <h2 class="section-title">Peluquerías asociadas</h2>
+      <p class="section-description">Los mejores profesionales confían en Klipp diariamente.</p>
+
+      <div class="grid">
+        <div class="card salon-card">
+          <div class="salon-avatar">S</div>
+          <h3>Studio '88</h3>
+          <p>Especialistas en degradados modernos y cuidado de barba.</p>
+        </div>
+        <div class="card salon-card">
+          <div class="salon-avatar">L</div>
+          <h3>Lumière Hair</h3>
+          <p>Alta peluquería, tintes orgánicos y tratamientos de autor.</p>
+        </div>
+        <div class="card salon-card">
+          <div class="salon-avatar">B</div>
+          <h3>The Barber Club</h3>
+          <p>Cortes clásicos en un ambiente premium estilo vintage.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: RESERVA VISUAL -->
+    <section id="reservar">
+      <h2 class="section-title">Reserva tu cita</h2>
+      <p class="section-description">Selecciona tu salón, servicio y horario preferido.</p>
+
+      <div class="booking-box">
+        <form action="#">
+          <div class="booking-grid">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Peluquería</label>
+              <select class="form-select">
+                <option>Studio '88</option>
+                <option>Lumière Hair</option>
+                <option>The Barber Club</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Servicio</label>
+              <select class="form-select">
+                <option>Corte de pelo</option>
+                <option>Corte + Arreglo de barba</option>
+                <option>Estilismo completo</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Fecha</label>
+              <input type="date" class="form-input" style="color-scheme: dark;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Hora</label>
+              <select class="form-select">
+                <option>10:00</option>
+                <option>11:30</option>
+                <option>16:00</option>
+                <option>17:30</option>
+                <option>19:00</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-reservar" style="width: 100%; padding: 1rem; font-size: 1rem;">Confirmar Reserva</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© 2026 Klipp Inc. Todos los derechos reservados.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

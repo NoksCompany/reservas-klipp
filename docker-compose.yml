@@ -19,10 +19,10 @@ services:
     environment:
       PORT: 3000
       DB_HOST: mariadb
-      DB_PORT: 3306
-      # TODO F3: pasar DB_NAME, DB_USER y DB_PASSWORD desde .env.
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-lite-latest}
+      DB_PORT: 3306 
+      # TODO F3: pasar DB_NAME, DB_USER y DB_PASSWORD desde .env. 
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-} 
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-lite-latest} 
       DEBUG_CHAT: ${DEBUG_CHAT:-true}
       TZ: Europe/Madrid
     # CORRECCIÓN PROPORCIONADA: privada llega a MariaDB; publica permite salir a Gemini.
